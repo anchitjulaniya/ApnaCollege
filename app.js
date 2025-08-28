@@ -11,8 +11,7 @@ const PORT = process.env.PORT || 5000;
 
 
 const allowedOrigins = [
-    "http://localhost:5173",
-  "https://real-time-bid-engine.vercel.app" 
+  "https://apna-college-gules.vercel.app/login" 
 ];
 
 
