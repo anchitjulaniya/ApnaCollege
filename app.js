@@ -6,24 +6,49 @@ const userRouter = require('./src/routes/user');
 
 dotenv.config();
 
-const app = express();  
+const app = express();
 const PORT = process.env.PORT || 5000;
-// console.log(process.env.JWT_SECRET);
+
+
+const allowedOrigins = [
+  "https://real-time-bid-engine.vercel.app" 
+];
+
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 
 
 app.use(express.json());
-app.use(cors());
+
+
 app.use('/api', userRouter);
 
-mongoose.connect(process.env.MONGO_URL,{
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+
+app.get("/", (req, res) => {
+  res.send("✅ API is running...");
+});
+
+
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 }).then(() => {
-    console.log('Connected to MongoDB');
+  console.log('Connected to MongoDB');
 }).catch((error) => {
-    console.error('Error connecting to MongoDB:', error);
+  console.error('Error connecting to MongoDB:', error);
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
